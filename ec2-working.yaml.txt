@@ -2,3 +2,28 @@ Resources:
   Instance:
     Type: AWS::EC2::Instance
     Properties: {}
+
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Added EC2 instance configuration and networking settings
+Revision #: 1.0
+Date: 2026-05-21
+Parameters:
+  LatestAmiId:
+    Type : "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>"
+    Default: "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
+Resources:
+  Ec2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+BlockDeviceMappings:
+     - DeviceName: /dev/sdm
+        Ebs:
+             VolumeType: gp2
+             DeleteOnTermination: false
+             VolumeSize: 20
+      ImageId: !Ref LatestAmiId
+      KeyName: !Ref AWS::AccountId
+      InstanceType: t2.micro
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: "true"
+           DeviceIndex: "0"

@@ -1,0 +1,67 @@
+# Description of what this change includes
+# Revision number
+# Date
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Creates a VPC in us-west-2 spanning three Availability Zones with one subnet in each AZ.
+
+Resources:
+
+  # Creates the main Virtual Private Cloud for the environment.
+  StudentVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: VPC-nicsim7425
+
+  # Creates a subnet in the first Availability Zone.
+  SubnetAZ1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref StudentVPC
+      CidrBlock: 10.0.1.0/24
+      AvailabilityZone: us-west-2a
+      Tags:
+        - Key: Name
+          Value: Subnet-us-west-2a
+
+  # Creates a subnet in the second Availability Zone.
+  SubnetAZ2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref StudentVPC
+      CidrBlock: 10.0.2.0/24
+      AvailabilityZone: us-west-2b
+      Tags:
+        - Key: Name
+          Value: Subnet-us-west-2b
+
+  # Creates a subnet in the third Availability Zone.
+  SubnetAZ3:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref StudentVPC
+      CidrBlock: 10.0.3.0/24
+      AvailabilityZone: us-west-2c
+      Tags:
+        - Key: Name
+          Value: Subnet-us-west-2c
+
+Outputs:
+
+  # Displays the ID of the created VPC.
+  VPCId:
+    Description: ID of the created VPC
+    Value: !Ref StudentVPC
+
+  # Displays the subnet IDs created across the three Availability Zones.
+  SubnetIds:
+    Description: Subnets created across three Availability Zones
+    Value: !Join
+      - ', '
+      - - !Ref SubnetAZ1
+        - !Ref SubnetAZ2
+        - !Ref SubnetAZ3
